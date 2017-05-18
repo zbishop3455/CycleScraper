@@ -10,71 +10,111 @@ import java.util.Scanner;
 public class Scraper {
 
 	public static void main(String[] args) {
-		int searchAmount = 1;
-		String price;
-		Scanner scanny = new Scanner(System.in);
-		Document cl = null;
-		
-		System.out.println("Welcom to CycleScraper! \n");
-		System.out.println("Enter your max price (USD): ");
 		
 		boolean keepGoing = true;
+		int searchAmount;
+		String menuOption;
+		String criteriaOption;
+		boolean keepSelecting;
+		Scanner scanny = new Scanner(System.in);
 		
+		//search variable
+		String minPrice;
+		String maxPrice;
+		String makeModel;
+		String engineSizeMin;
+		String engineSizeMax;
+		String yearMin;
+		String yearMax;
+		String minMiles;
+		String maxMiles;
 		
-		//ask user their price range
+		System.out.println("Welcome to CycleScraper, here to help you find a motercycle! \n");
+		
+		//main menu
+
+		
+		//main loop
 		while(keepGoing){
-		price = scanny.nextLine();
-		try{
-			searchAmount = Integer.parseInt(price);
-			keepGoing = false;
-			}catch(Exception e){
-				System.out.println("Invalid Amount");
+			System.out.println("1) Enter search criteria");
+			System.out.println("2) Submit Search");
+			System.out.println("3) Show results");
+			System.out.println("4) Exit");
+			
+			System.out.print("Enter your selection: ");
+			
+			menuOption = scanny.nextLine();
+			
+			if(menuOption.equals("1")){
+				//get search criteria, use another menu
+				
+				keepSelecting = true;
+				
+				while(keepSelecting){
+					System.out.println("Select an search parameter to change (not required)\n");
+					System.out.println("1) Minimum price");
+					System.out.println("2) Maximum price");
+					System.out.println("3) Make or model");
+					System.out.println("4) Minimum engine displacement");
+					System.out.println("5) Maximum engine displacement");
+					System.out.println("6) Minimum year");
+					System.out.println("7) Maximum year");
+					System.out.println("8) Minimum miles");
+					System.out.println("9) Maximum miles");
+					System.out.print("Enter your selection: ");
+					
+					criteriaOption = scanny.nextLine();
+					
+					switch(criteriaOption){
+					case "1":
+						System.out.println("kappa");
+						continue;
+					case "2":
+					case "3":
+					case "4":
+					case "5":
+					case "6":
+					case "7":
+					case "8":
+					case "9":
+					case "0":
+						keepSelecting = false;
+					default:
+						System.out.println("");
+					}
+				}
 			}
+			
+			if(menuOption.equals("2")){
+				//scrape data from web
+			}
+			
+			if(menuOption.equals("3")){
+				//print results, perhaps more printing options and sorting options later
+			}
+			
+			if(menuOption.equals("4")){
+				//exit program
+				System.out.println("Goodbye!");
+				keepGoing = false;
+			}
+			
+			
+			
+			
+//			
+//		}
+//		price = scanny.nextLine();
+//		try{
+//			searchAmount = Integer.parseInt(price);
+//			keepGoing = false;
+//			}catch(Exception e){
+//				System.out.println("Invalid Amount");
+//
 		}
 		scanny.close();
 		
-		//try to search craigslist
-		try {
-			cl = Jsoup.connect("https://indianapolis.craigslist.org/search/mca?max_price=" + searchAmount).get();
-			System.out.println("Downloaded data from craiglist");
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Unable to connect to craiglist");
-		}
 		
-		Elements paragraphs = cl.select("p.result-info");
-		Elements titlesRaw = paragraphs.select("a.result-title");
-		
-		//extract the title of each listing and store it in an array
-		Object[] titlesArray = titlesRaw.toArray();
-		String[] titles = new String[titlesArray.length];
-		for(int i=0;i<titlesArray.length;i++){
-			titles[i] = ((Element) titlesArray[i]).text();
-			//System.out.println(titles[i]);
-		}
-		
-		//get prices!
-		Elements pricesRaw = paragraphs.select("span.result-price");
-		Object[] pricesArray = pricesRaw.toArray();
-		String[] prices = new String[pricesArray.length];
-		for(int i=0;i<pricesArray.length;i++){
-			prices[i] = ((Element) pricesArray[i]).text();
-			//System.out.println(prices[i]);
-		}
-		
-		//find dates  by default, they are in order from most recent
-		Elements datesRaw = paragraphs.select("time.result-date");
-		Object[] datesArray = datesRaw.toArray();
-		String[] dates = new String[datesArray.length];
-		
-		for(int i=0;i<datesArray.length;i++){
-			dates[i] = ((Element) datesArray[i]).text();
-			System.out.println(dates[i]);
-		}
-	
-			
 		
 		
 
