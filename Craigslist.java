@@ -4,17 +4,20 @@ import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 public class Craigslist {
-	int searchMin;
-	int searchMax;
+	String url;
 	Document cl;
 	boolean dataLoaded = false;
 	String[] prices;
 	String[] dates;
 	String[] titles;
+	String[] searchCriteria;
+	int[] usedIndecies;
 	
-	public Craigslist(int searchMin, int searchMax){
-		this.searchMin = searchMin;
-		this.searchMax = searchMax;
+
+	public Craigslist(String[] searchCriteria){
+		//uses search data directly from Scraper.java
+		this.searchCriteria = searchCriteria;
+		createUrl();
 	}
 	
 	
@@ -22,7 +25,7 @@ public class Craigslist {
 	public void connect(){
 		//Attempts to download search data from craigslist
 		try {
-			cl = Jsoup.connect("https://indianapolis.craigslist.org/search/mca?max_price=" + searchMax).get();
+			cl = Jsoup.connect(url).get();
 			System.out.println("Downloaded data from craiglist");
 			dataLoaded = true;
 			
@@ -84,5 +87,74 @@ public class Craigslist {
 	
 	public String[] getDates(){
 		return this.dates;
+	}
+	
+	public void createUrl(){
+		//crafts the url to scrape using search criteria
+		
+		
+		//array of string url variable, indexes coorespond with those of search criteria
+		String[] searchCriteriaNames = new String[]{"min_price=", "max_price=", "auto_make_model=","min_engine_displacement_cc=","max_engine_displacement_cc=","min_auto_year=","max_auto_year","min_auto_miles=", "max_auto_miles="};
+		
+		boolean urlHasModes = true;
+		
+		
+		//check to see how many values are null so we know how many criteria our final url will have
+		int nullCount = 0;
+		for(int i=0;i<this.searchCriteria.length;i++){
+			
+			if(searchCriteria[i] == null){
+				nullCount++;
+			}
+		}
+		
+		if(nullCount == 9){
+			//all values are null, default url
+			urlHasModes = false;
+		}
+		
+		else{
+			//find which indecies are used and push their index into "usedIndecies"
+			usedIndecies = new int[this.searchCriteria.length - nullCount];
+			
+			//variable to keepTrack of where we are inserting into "usedIndecies"
+			int usedIndeciesIndex = 0;
+			
+			for(int i=0;i<this.searchCriteria.length;i++){
+				if(searchCriteria[i] != null){
+					//if a criteria exists, gather its index
+					usedIndecies[usedIndeciesIndex] = i;
+					usedIndeciesIndex++;
+				}
+			}
+			
+		}
+		
+		//craft the url
+		String urlBase = "https://indianapolis.craigslist.org/search/mca";
+		String urlMods = "?";
+		if(urlHasModes){
+			//calculate urlMods
+			for(int i=0;i<this.searchCriteria.length - nullCount;i++){
+				//loop through all usedIndexes
+				
+				//if its the first criteria, we do not need an & connective
+				if(i==0){
+					urlMods += searchCriteriaNames[usedIndecies[i]] + searchCriteria[usedIndecies[i]];
+				}
+				else{
+					urlMods += "&" + searchCriteriaNames[usedIndecies[i]] + searchCriteria[usedIndecies[i]];
+				}
+			}
+			
+			//combine base and mods
+			url = urlBase + urlMods;
+			System.out.println(url);
+			
+		}
+		else{
+			url = urlBase;
+		}
+		
 	}
 }

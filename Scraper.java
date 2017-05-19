@@ -8,26 +8,32 @@ import java.util.Scanner;
 
 @SuppressWarnings("unused")
 public class Scraper {
+	
 
 	public static void main(String[] args) {
-		
 		boolean keepGoing = true;
 		int searchAmount;
 		String menuOption;
 		String criteriaOption;
 		boolean keepSelecting;
+		boolean keepInputing;
+		Craigslist cl;
 		Scanner scanny = new Scanner(System.in);
 		
 		//search variable
-		String minPrice;
-		String maxPrice;
-		String makeModel;
-		String engineSizeMin;
-		String engineSizeMax;
-		String yearMin;
-		String yearMax;
-		String minMiles;
-		String maxMiles;
+		String minPrice = null;
+		String maxPrice = null;
+		String makeModel = null;
+		String minEngineSize = null;
+		String maxEngineSize = null;
+		String minYear = null;
+		String maxYear = null;
+		String minMiles = null;
+		String maxMiles = null;
+		String[] searchCriteria;
+		
+		
+		
 		
 		System.out.println("Welcome to CycleScraper, here to help you find a motercycle! \n");
 		
@@ -44,6 +50,7 @@ public class Scraper {
 			System.out.print("Enter your selection: ");
 			
 			menuOption = scanny.nextLine();
+			System.out.println("\n");
 			
 			if(menuOption.equals("1")){
 				//get search criteria, use another menu
@@ -51,7 +58,7 @@ public class Scraper {
 				keepSelecting = true;
 				
 				while(keepSelecting){
-					System.out.println("Select an search parameter to change (not required)\n");
+					System.out.println("Select an search parameter to change (not required, if no preference enter 0)\n");
 					System.out.println("1) Minimum price");
 					System.out.println("2) Maximum price");
 					System.out.println("3) Make or model");
@@ -61,32 +68,251 @@ public class Scraper {
 					System.out.println("7) Maximum year");
 					System.out.println("8) Minimum miles");
 					System.out.println("9) Maximum miles");
+					System.out.println("0) Exit");
 					System.out.print("Enter your selection: ");
 					
 					criteriaOption = scanny.nextLine();
 					
-					switch(criteriaOption){
-					case "1":
-						System.out.println("kappa");
-						continue;
-					case "2":
-					case "3":
-					case "4":
-					case "5":
-					case "6":
-					case "7":
-					case "8":
-					case "9":
-					case "0":
+					if(criteriaOption.equals("1")){
+						//set min price;
+						keepInputing = true;
+						while(keepInputing){
+							//set min price
+							System.out.print("Enter your min price: ");
+							minPrice = scanny.nextLine();
+							
+							
+							//validate the input and check if 0 
+							if(validateInt(minPrice)){
+								//they entered a valid int
+								keepInputing = false;
+								continue;
+							}
+							if(minPrice.equals("0")){
+								
+								minPrice = null;
+								keepInputing = false;
+								continue;
+							}
+							else{
+								System.out.println("Invalid input; whole numbers only");
+								minPrice = null;
+							}
+						}
+					}
+					
+					if(criteriaOption.equals("2")){
+						// set max price
+						keepInputing = true;
+						while(keepInputing){
+							//set min price
+							System.out.print("Enter your max"
+									+ " price: ");
+							maxPrice = scanny.nextLine();
+							
+							//validate the input and check if 0 
+							if(validateInt(maxPrice)){
+								//they entered a valid int
+								keepInputing = false;
+								continue;
+								
+							}
+							if(maxPrice.equals("0")){
+								maxPrice = null;
+								keepInputing = false;
+								continue;
+							}
+							else{
+								System.out.println("Invalid input; whole numbers only");
+								maxPrice = null;
+							}
+						}
+					}
+					
+					if(criteriaOption.equals("3")){
+						//make and model
+						System.out.print("Enter make or model:");
+						makeModel = scanny.nextLine();
+						
+						if(makeModel.equals("0")){
+							makeModel = null;
+						}
+					}
+					
+					if(criteriaOption.equals("4")){
+						// set max price
+						keepInputing = true;
+						while(keepInputing){
+							//engine min size
+							System.out.print("Enter your min engine displacement: ");
+							minEngineSize = scanny.nextLine();
+							
+							//validate the input and check if 0 
+							if(validateInt(minEngineSize)){
+								//they entered a valid int
+								keepInputing = false;
+								continue;
+								
+							}
+							if(minEngineSize.equals("0")){
+								minEngineSize = null;
+								keepInputing = false;
+								continue;
+							}
+							else{
+								System.out.println("Invalid input; whole numbers only");
+								minEngineSize = null;
+							}
+						}
+					}
+					
+					if(criteriaOption.equals("5")){
+						//engine size max
+						keepInputing = true;
+						while(keepInputing){
+							//engine min size
+							System.out.print("Enter your max engine displacement: ");
+							maxEngineSize = scanny.nextLine();
+							
+							//validate the input and check if 0 
+							if(validateInt(maxEngineSize)){
+								//they entered a valid int
+								keepInputing = false;
+								continue;
+							}
+							if(maxEngineSize.equals("0")){
+								maxEngineSize = null;
+								keepInputing = false;
+								continue;
+							}
+							else{
+								System.out.println("Invalid input; whole numbers only");
+								maxEngineSize = null;
+							}
+						}
+					}
+					
+					
+					
+					if(criteriaOption.equals("6")){
+						//min year
+						keepInputing = true;
+						while(keepInputing){
+							//engine min size
+							System.out.print("Enter your min year: ");
+							minYear = scanny.nextLine();
+							
+							//validate the input and check if 0 
+							if(validateInt(minYear) && minYear.length() == 4){
+								//they entered a valid int
+								keepInputing = false;
+								continue;
+							}
+							if(minYear.equals("0")){
+								minYear = null;
+								keepInputing = false;
+								continue;
+							}
+							else{
+								System.out.println("Invalid input; 4 numbers only");
+								minYear = null;
+							}
+						}
+					}
+					
+					if(criteriaOption.equals("7")){
+						//max year
+						keepInputing = true;
+						while(keepInputing){
+							//engine min size
+							System.out.print("Enter your max year ");
+							maxYear = scanny.nextLine();
+							
+							//validate the input and check if 0 
+							if(validateInt(maxYear) && maxYear.length() == 4){
+								//they entered a valid int
+								keepInputing = false;
+								continue;
+							}
+							if(maxYear.equals("0")){
+								maxYear = null;
+								keepInputing = false;
+								continue;
+							}
+							else{
+								System.out.println("Invalid input; 4 numbers only");
+								maxYear = null;
+							}
+						}
+					}
+					
+					if(criteriaOption.equals("8")){
+						//min miles
+						keepInputing = true;
+						while(keepInputing){
+							//engine min size
+							System.out.print("Enter your min miles: ");
+							minMiles = scanny.nextLine();
+							
+							//validate the input and check if 0 
+							if(validateInt(minMiles)){
+								//they entered a valid int
+								keepInputing = false;
+								continue;
+							}
+							if(minMiles.equals("0")){
+								minMiles = null;
+								keepInputing = false;
+								continue;
+							}
+							else{
+								System.out.println("Invalid input; whole numbers only");
+								minMiles = null;
+							}
+						}
+					}
+					
+					if(criteriaOption.equals("9")){
+						//max miles
+						keepInputing = true;
+						while(keepInputing){
+							//engine min size
+							System.out.print("Enter your max miles: ");
+							maxMiles = scanny.nextLine();
+							
+							//validate the input and check if 0 
+							if(validateInt(maxMiles)){
+								//they entered a valid int
+								keepInputing = false;
+								continue;
+							}
+							if(maxMiles.equals("0")){
+								maxMiles = null;
+								keepInputing = false;
+								continue;
+								
+							}
+							else{
+								System.out.println("Invalid input; whole numbers only");
+								maxMiles = null;
+							}
+						}
+					}
+					
+					if(criteriaOption.equals("0")){
+						//exit
+						
 						keepSelecting = false;
-					default:
-						System.out.println("");
+						
 					}
 				}
 			}
 			
 			if(menuOption.equals("2")){
 				//scrape data from web
+				searchCriteria = new String[]{minPrice,maxPrice,makeModel,minEngineSize,maxEngineSize,minYear,maxYear,minMiles,maxMiles};
+				cl = new Craigslist(searchCriteria);
+				
 			}
 			
 			if(menuOption.equals("3")){
@@ -97,27 +323,30 @@ public class Scraper {
 				//exit program
 				System.out.println("Goodbye!");
 				keepGoing = false;
+				scanny.close();
 			}
 			
-			
-			
-			
-//			
-//		}
-//		price = scanny.nextLine();
-//		try{
-//			searchAmount = Integer.parseInt(price);
-//			keepGoing = false;
-//			}catch(Exception e){
-//				System.out.println("Invalid Amount");
-//
-		}
-		scanny.close();
-		
-		
-		
-		
 
+		}
+
+	}
+	
+	public static boolean validateInt(String x){
+		//try to convert string to int, if we can, return true
+		int number;
+		boolean valid = false;
+		try{
+			number = Integer.parseInt(x);
+			if(number > 0){
+				valid = true;
+			}
+		}
+		catch(Exception e){
+			valid = false;
+		}
+		return valid;
 	}
 
 }
+		
+		
