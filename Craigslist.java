@@ -10,6 +10,7 @@ public class Craigslist {
 	String[] prices;
 	String[] dates;
 	String[] titles;
+	String[] links;
 	String[] searchCriteria;
 	int[] usedIndecies;
 	
@@ -18,6 +19,8 @@ public class Craigslist {
 		//uses search data directly from Scraper.java
 		this.searchCriteria = searchCriteria;
 		createUrl();
+		connect();
+		extractData();
 	}
 	
 	
@@ -64,11 +67,22 @@ public class Craigslist {
 			Elements datesRaw = paragraphs.select("time.result-date");
 			Object[] datesArray = datesRaw.toArray();
 			dates = new String[datesArray.length];
-			
 			for(int i=0;i<datesArray.length;i++){
 				dates[i] = ((Element) datesArray[i]).text();
-				System.out.println(dates[i]);
 			}
+			
+			//find urls
+			Elements linksRaw = paragraphs.select("a.result-title.hdrlnk");
+			Object[] linksArray = linksRaw.toArray();
+			links = new String[linksArray.length];
+			for(int i=0; i<linksArray.length;i++){
+				links[i] = ((Element) linksArray[i]).attr("abs:href");
+			}
+			
+			System.out.println("links " + links.length);
+			System.out.println(prices.length);
+			System.out.println(titles.length);
+			
 		}
 		else{
 			System.out.println("Cannot extract data");
@@ -149,7 +163,6 @@ public class Craigslist {
 			
 			//combine base and mods
 			url = urlBase + urlMods;
-			System.out.println(url);
 			
 		}
 		else{

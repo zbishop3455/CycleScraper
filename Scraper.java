@@ -68,7 +68,7 @@ public class Scraper {
 					System.out.println("7) Maximum year");
 					System.out.println("8) Minimum miles");
 					System.out.println("9) Maximum miles");
-					System.out.println("0) Exit");
+					System.out.println("0) Back");
 					System.out.print("Enter your selection: ");
 					
 					criteriaOption = scanny.nextLine();
