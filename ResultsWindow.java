@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
 //creates a window that displays the data foud in a grid
 
 
@@ -25,7 +23,9 @@ public class ResultsWindow extends JPanel {
 		//make table
 		DefaultTableModel tableModel = new DefaultTableModel(data, inputColumnNames);
 		JTable table = new JTable(tableModel);
-		table.setAutoCreateRowSorter(true);
+
+		//table.setEnabled(false);
+		
 		//create scoll pane
 		scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
@@ -39,7 +39,7 @@ public class ResultsWindow extends JPanel {
 		JFrame window = new JFrame("Search Results");
 		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		window.add(scrollPane);
-		window.setSize(500,500);
+		window.setSize(800,500);
 		window.setBounds(500, 400, 500, 500);
 		window.setAlwaysOnTop(true);
 		window.show();

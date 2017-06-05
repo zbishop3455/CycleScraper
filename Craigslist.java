@@ -11,6 +11,8 @@ public class Craigslist {
 	public String[] dates;
 	public String[] titles;
 	public String[] links;
+	public String[] locations;
+	public String[] source;
 	String[] searchCriteria;
 	int[] usedIndecies;
 	
@@ -42,50 +44,41 @@ public class Craigslist {
 	
 	public void extractData(){
 		
-		if(dataLoaded){
-			Elements paragraphs = cl.select("p.result-info");
-			Elements titlesRaw = paragraphs.select("a.result-title");
+		if(dataLoaded){	
+			Elements listingsRaw = cl.select("li.result-row");
 			
-			//extract the title
-			Object[] titlesArray = titlesRaw.toArray();
-			titles = new String[titlesArray.length];
-			for(int i=0;i<titlesArray.length;i++){
-				titles[i] = ((Element) titlesArray[i]).text();
-				//System.out.println(titles[i]);
-			}
+			//extract each listing
+			Object[] listingsArray = listingsRaw.toArray();
 			
-			//get prices!
-			Elements pricesRaw = paragraphs.select("span.result-price");
-			Object[] pricesArray = pricesRaw.toArray();
-			prices = new String[pricesArray.length];
-			for(int i=0;i<pricesArray.length;i++){
-				prices[i] = ((Element) pricesArray[i]).text();
-				if(pricesArray[i].equals("") || pricesArray[i] == null){
-					prices[i] = "0";
-				}
-				//System.out.println(prices[i]);
-			}
+			titles = new String[listingsArray.length];
+			prices = new String[listingsArray.length];
+			dates = new String[listingsArray.length];
+			links = new String[listingsArray.length];
+			locations = new String[listingsArray.length];
+			source = new String[listingsArray.length];
 			
-			//find dates  by default, they are in order from most recent
-			Elements datesRaw = paragraphs.select("time.result-date");
-			Object[] datesArray = datesRaw.toArray();
-			dates = new String[datesArray.length];
-			for(int i=0;i<datesArray.length;i++){
-				dates[i] = ((Element) datesArray[i]).text();
-			}
-			
-			//find urls
-			Elements linksRaw = paragraphs.select("a.result-title.hdrlnk");
-			Object[] linksArray = linksRaw.toArray();
-			links = new String[linksArray.length];
-			for(int i=0; i<linksArray.length;i++){
-				links[i] = ((Element) linksArray[i]).attr("abs:href");
-			}
-			
-			System.out.println("links " + links.length);
-			System.out.println(prices.length);
-			System.out.println(titles.length);
-			
+			//loop through each listing and extract the data
+			for(int i=0; i<listingsArray.length;i++){
+				Element currentListing = (Element)listingsArray[i];
+				//title
+				Elements currentTitle = currentListing.select("a.result-title");
+				titles[i] = currentTitle.text();
+				//price
+				Elements currentPrice = currentListing.select("span.result-meta").select("span.result-price");
+				prices[i] = currentPrice.text();
+				//date
+				Elements currentDate = currentListing.select("time.result-date");
+				dates[i] = currentDate.text();
+				//urls
+				Elements currentUrls = currentListing.select("a.result-title.hdrlnk");
+				links[i] = currentUrls.attr("abs:href");
+				//locations
+				Elements currentLocation = currentListing.select("span.result-hood");
+				locations[i] = currentLocation.text();
+				//source
+				source[i] = "Craigslist";
+				
+			}	
 		}
 		else{
 			System.out.println("Cannot extract data");
@@ -166,8 +159,6 @@ public class Craigslist {
 			
 			//combine base and mods
 			url = urlBase + urlMods;
-			System.out.println(url);
-			
 		}
 		else{
 			url = urlBase;

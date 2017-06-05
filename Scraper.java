@@ -24,7 +24,7 @@ public class Scraper {
 		//2D array, each row is a motercycle listing
 		Object[][] allData = null;
 		//array of the column names for displaying search results
-		String[] columnNames = {"Name", "Price"};
+		String[] columnNames = {"Name", "Price","Date Posted", "Location", "Link"};
 		
 		
 		//search variable
@@ -326,10 +326,24 @@ public class Scraper {
 				for(int i=0; i <columnNames.length;i++){
 					 for(int j=0;j<numberOfTitles;j++){
 						 if(i==0){
+							 //title
 							 allData[j][i] = cl.titles[j];
 						 }
 						 if(i==1){
-							 //allData[j][i] = cl.prices[j];
+							 //price
+							 allData[j][i] = cl.prices[j];
+						 }
+						 if(i==2){
+							 //date
+							 allData[j][i] = cl.dates[j];
+						 }
+						 if(i==3){
+							 //location 
+							 allData[j][i] = cl.locations[j];
+						 }
+						 if(i==4){
+							 //link
+							 allData[j][i] = cl.links[j];
 						 }
 					 }
 				}
