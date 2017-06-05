@@ -5,6 +5,7 @@ import org.jsoup.helper.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 import java.util.Scanner;
+import java.util.Vector;
 
 @SuppressWarnings("unused")
 public class Scraper {
@@ -20,6 +21,12 @@ public class Scraper {
 		Craigslist cl;
 		Scanner scanny = new Scanner(System.in);
 		
+		//2D array, each row is a motercycle listing
+		Object[][] allData = null;
+		//array of the column names for displaying search results
+		String[] columnNames = {"Name", "Price"};
+		
+		
 		//search variable
 		String minPrice = null;
 		String maxPrice = null;
@@ -32,9 +39,7 @@ public class Scraper {
 		String maxMiles = null;
 		String[] searchCriteria;
 		
-		
-		
-		
+
 		System.out.println("Welcome to CycleScraper, here to help you find a motercycle! \n");
 		
 		//main menu
@@ -106,8 +111,7 @@ public class Scraper {
 						keepInputing = true;
 						while(keepInputing){
 							//set min price
-							System.out.print("Enter your max"
-									+ " price: ");
+							System.out.print("Enter your max"+ " price: ");
 							maxPrice = scanny.nextLine();
 							
 							//validate the input and check if 0 
@@ -146,6 +150,7 @@ public class Scraper {
 							//engine min size
 							System.out.print("Enter your min engine displacement: ");
 							minEngineSize = scanny.nextLine();
+							
 							
 							//validate the input and check if 0 
 							if(validateInt(minEngineSize)){
@@ -309,14 +314,35 @@ public class Scraper {
 			}
 			
 			if(menuOption.equals("2")){
-				//scrape data from web
+				//scrape data from web and add store results
 				searchCriteria = new String[]{minPrice,maxPrice,makeModel,minEngineSize,maxEngineSize,minYear,maxYear,minMiles,maxMiles};
 				cl = new Craigslist(searchCriteria);
+				
+				//set the size off "allData" to the sum of listing from each site
+				int numberOfTitles = cl.titles.length;
+				allData = new Object[numberOfTitles][columnNames.length];
+				
+				//loop through each columnName
+				for(int i=0; i <columnNames.length;i++){
+					 for(int j=0;j<numberOfTitles;j++){
+						 if(i==0){
+							 allData[j][i] = cl.titles[j];
+						 }
+						 if(i==1){
+							 //allData[j][i] = cl.prices[j];
+						 }
+					 }
+				}
+				
+				
+				
 				
 			}
 			
 			if(menuOption.equals("3")){
 				//print results, perhaps more printing options and sorting options later
+				ResultsWindow results = new ResultsWindow(allData,columnNames);
+				
 			}
 			
 			if(menuOption.equals("4")){

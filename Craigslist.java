@@ -7,10 +7,10 @@ public class Craigslist {
 	String url;
 	Document cl;
 	boolean dataLoaded = false;
-	String[] prices;
-	String[] dates;
-	String[] titles;
-	String[] links;
+	public String[] prices;
+	public String[] dates;
+	public String[] titles;
+	public String[] links;
 	String[] searchCriteria;
 	int[] usedIndecies;
 	
@@ -60,6 +60,9 @@ public class Craigslist {
 			prices = new String[pricesArray.length];
 			for(int i=0;i<pricesArray.length;i++){
 				prices[i] = ((Element) pricesArray[i]).text();
+				if(pricesArray[i].equals("") || pricesArray[i] == null){
+					prices[i] = "0";
+				}
 				//System.out.println(prices[i]);
 			}
 			
@@ -163,6 +166,7 @@ public class Craigslist {
 			
 			//combine base and mods
 			url = urlBase + urlMods;
+			System.out.println(url);
 			
 		}
 		else{
