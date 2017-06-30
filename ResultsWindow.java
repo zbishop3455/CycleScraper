@@ -29,6 +29,8 @@ public class ResultsWindow extends JPanel {
 		//create scoll pane
 		scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
+		table.setAutoResizeMode(2);
+		table.setAutoCreateRowSorter(true);
 		//create window
 		createWindow();
 		
@@ -41,8 +43,8 @@ public class ResultsWindow extends JPanel {
 		window.add(scrollPane);
 		window.setSize(800,500);
 		window.setBounds(500, 400, 500, 500);
-		window.setAlwaysOnTop(true);
-		window.show();
+		//window.setAlwaysOnTop(true);
+		window.setVisible(true);
 		
 	}
 	
